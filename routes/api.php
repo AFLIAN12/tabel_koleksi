@@ -15,6 +15,7 @@ use App\Http\Controllers\KolDarahController;
 use App\Http\Controllers\KolPekerjaanController;
 use App\Http\Controllers\KolPenghasilanController;
 use App\Http\Controllers\KolStatusSipilController;
+use App\Http\Controllers\KolHubunganController;
 // Routes untuk kol_* (master data)
 Route::apiResource('kol-prodi', KolProdiController::class);
 Route::apiResource('kol-jurusan', KolJurusanController::class);
@@ -25,6 +26,7 @@ Route::apiResource('kol-provinsi', KolProvinsiController::class);
 Route::apiResource('kol-wilayah', KolWilayahController::class);
 Route::apiResource('kol-status-hidup', KolStatusHidupController::class);
 
+Route::apiResource('kol-hubungan', KolHubunganController::class);
 Route::apiResource('kol-agama', KolAgamaController::class);
 Route::apiResource('kol-darah', KolDarahController::class);
 Route::apiResource('kol-pekerjaan', KolPekerjaanController::class);
