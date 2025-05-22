@@ -15,32 +15,6 @@ use App\Http\Controllers\KolDarahController;
 use App\Http\Controllers\KolPekerjaanController;
 use App\Http\Controllers\KolPenghasilanController;
 use App\Http\Controllers\KolStatusSipilController;
-use App\Http\Controllers\KolHubunganController;
-
-use App\Http\Controllers\AsalSekolahController;
-use App\Http\Controllers\BebasYudisiumController;
-use App\Http\Controllers\BidangSekolahController;
-use App\Http\Controllers\BulanController;
-use App\Http\Controllers\JalurPmbController;
-use App\Http\Controllers\JenisAktifitasController;
-use App\Http\Controllers\JenisEvaluasiController;
-use App\Http\Controllers\JenisMkController;
-use App\Http\Controllers\JenisSekolahController;
-use App\Http\Controllers\JenisSkController;
-use App\Http\Controllers\JenisSuratOnlineController;
-use App\Http\Controllers\JenjangPoliteknikController;
-use App\Http\Controllers\PilihanProdiSbmpnController;
-use App\Http\Controllers\PoliteknikController;
-use App\Http\Controllers\ProdiPoliteknikController;
-use App\Http\Controllers\ProgramSekolahController;
-use App\Http\Controllers\SkemaLspController;
-use App\Http\Controllers\StatusController;
-use App\Http\Controllers\StatusKalenderController;
-use App\Http\Controllers\StatusKeluargaController;
-use App\Http\Controllers\StatusStrukturalController;
-use App\Http\Controllers\TerminalController;
-use App\Http\Controllers\PilihanProdiController;
-
 // Routes untuk kol_* (master data)
 Route::apiResource('kol-prodi', KolProdiController::class);
 Route::apiResource('kol-jurusan', KolJurusanController::class);
@@ -51,6 +25,7 @@ Route::apiResource('kol-provinsi', KolProvinsiController::class);
 Route::apiResource('kol-wilayah', KolWilayahController::class);
 Route::apiResource('kol-status-hidup', KolStatusHidupController::class);
 
+Route::apiResource('kol-hubungan', KolHubunganController::class);
 Route::apiResource('kol-agama', KolAgamaController::class);
 Route::apiResource('kol-darah', KolDarahController::class);
 Route::apiResource('kol-pekerjaan', KolPekerjaanController::class);
