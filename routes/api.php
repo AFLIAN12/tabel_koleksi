@@ -85,3 +85,4 @@ Route::apiResource('status-keluarga', StatusKeluargaController::class);
 Route::apiResource('status-struktural', StatusStrukturalController::class);
 Route::apiResource('terminal', TerminalController::class);
 Route::apiResource('pilihan-prodi', PilihanProdiController::class);
+Route::apiResource('pendidikan', PendidikanController::class);
