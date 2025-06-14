@@ -40,7 +40,14 @@ use App\Http\Controllers\KolStatusKeluargaController;
 use App\Http\Controllers\KolStatusStrukturalController;
 use App\Http\Controllers\KolTerminalController;
 use App\Http\Controllers\KolPilihanProdiController;
+use App\Http\Controllers\KategoriUKTController;
+use App\Http\Controllers\KeuTagihanController;
+use App\Http\Controllers\KeuKeringananController;
 
+Route::apiResource('kategori-ukt', KategoriUKTController::class);
+Route::apiResource('tagihan', KeuTagihanController::class);
+Route::apiResource('keringanan', KeuKeringananController::class);
+Route::get('tagihan/{id}/nominal-akhir', [\App\Http\Controllers\KeuTagihanController::class, 'nominalAkhir']);
 Route::apiResource('kol-pilihan-prodi', KolPilihanProdiController::class);
 // Routes untuk kol_* (master data)
 Route::apiResource('kol-prodi', KolProdiController::class);
