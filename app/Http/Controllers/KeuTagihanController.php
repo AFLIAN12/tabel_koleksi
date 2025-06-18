@@ -112,43 +112,52 @@ class KeuTagihanController extends Controller
  * )
  */
     // Detail tagihan
-    public function show($id)
+        public function show($id)
     {
         $tagihan = KeuTagihan::with('kategoriUkt')->findOrFail($id);
 
-    // Ambil nama_thn_ak dari microservice
-    $nama_thn_ak = null;
-    try {
-        $response = Http::get('https://ti054d01.agussbn.my.id/api/thn-ak/' . $tagihan->id_thn_ak);
-        if ($response->ok()) {
-            $thnAk = $response->json();
-            $nama_thn_ak = $thnAk['nama_thn_ak'] ?? null;
-        }
-    } catch (\Exception $e) {
+        // Ambil nama tahun akademik dari microservice
         $nama_thn_ak = null;
-    }
-        $mahasiswa = null;
-    try {
-        $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa/' . $tagihan->nim);
-        if ($response->ok()) {
-            $mahasiswa = $response->json();
+        try {
+            $response = Http::get('https://ti054d01.agussbn.my.id/api/thn-ak/' . $tagihan->id_thn_ak);
+            if ($response->ok()) {
+                $thnAk = $response->json();
+                $nama_thn_ak = $thnAk['nama_thn_ak'] ?? null;
+            }
+        } catch (\Exception $e) {
+            $nama_thn_ak = null;
         }
-    } catch (\Exception $e) {
-        $mahasiswa = null;
-    }
-    return response()->json([
-        'id_tagihan' => $tagihan->id_tagihan,
-        'nim' => $tagihan->nim,
-        'nama_mhs' => $mahasiswa['nama_mhs'] ?? null,
-        'nama_tagihan' => $tagihan->nama_tagihan,
-        'id_thn_ak' => $tagihan->id_thn_ak,
-        'nama_thn_ak' => $nama_thn_ak,
-        'status_tagihan' => $tagihan->status_tagihan,
-        'tgl_terbit' => $tagihan->tgl_terbit,
-        'id_kategori_ukt' => $tagihan->id_kategori_ukt,
-        'kategori_ukt' => $tagihan->kategoriUkt ? $tagihan->kategoriUkt->kategori_ukt : null,
-        'nominal' => $tagihan->kategoriUkt ? $tagihan->kategoriUkt->nominal : null,
-    ]);
+
+        // Ambil nama mahasiswa berdasarkan NIM (karena endpoint tidak menerima NIM langsung)
+        $nama_mhs = null;
+        try {
+            $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa');
+            if ($response->ok()) {
+                $listMahasiswa = $response->json();
+                foreach ($listMahasiswa as $mhs) {
+                    if (isset($mhs['nim']) && $mhs['nim'] === $tagihan->nim) {
+                        $nama_mhs = $mhs['nama_mhs'] ?? null;
+                        break;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            $nama_mhs = null;
+        }
+
+        return response()->json([
+            'id_tagihan'      => $tagihan->id_tagihan,
+            'nim'             => $tagihan->nim,
+            'nama_mhs'        => $nama_mhs,
+            'nama_tagihan'    => $tagihan->nama_tagihan,
+            'id_thn_ak'       => $tagihan->id_thn_ak,
+            'nama_thn_ak'     => $nama_thn_ak,
+            'status_tagihan'  => $tagihan->status_tagihan,
+            'tgl_terbit'      => $tagihan->tgl_terbit,
+            'id_kategori_ukt' => $tagihan->id_kategori_ukt,
+            'kategori_ukt'    => $tagihan->kategoriUkt->kategori_ukt ?? null,
+            'nominal'         => $tagihan->kategoriUkt->nominal ?? null,
+        ]);
     }
 
     /**
