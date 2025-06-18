@@ -12,7 +12,7 @@ return new class extends Migration {
         $table->string('nim', 16);
         $table->string('nama_tagihan', 100);
         $table->char('id_thn_ak', 5);
-        $table->unsignedBigInteger('id_kategori_ukt');
+        $table->string('id_kategori_ukt');
         $table->tinyInteger('status_tagihan')->default(0);
         $table->date('tgl_terbit');
         $table->timestamps();

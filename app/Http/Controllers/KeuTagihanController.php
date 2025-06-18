@@ -30,7 +30,7 @@ class KeuTagihanController extends Controller
  *             @OA\Property(property="nim", type="string"),
  *             @OA\Property(property="nama_tagihan", type="string"),
  *             @OA\Property(property="id_thn_ak", type="string"),
- *             @OA\Property(property="id_kategori_ukt", type="integer"),
+ *             @OA\Property(property="id_kategori_ukt", type="string"),
  *             @OA\Property(property="status_tagihan", type="integer"),
  *             @OA\Property(property="tgl_terbit", type="string", format="date")
  *         ))
@@ -55,7 +55,7 @@ class KeuTagihanController extends Controller
  *             @OA\Property(property="nim", type="string", example="1234567890123456"),
  *             @OA\Property(property="nama_tagihan", type="string", example="UKT Semester Genap 2025"),
  *             @OA\Property(property="id_thn_ak", type="string", example="20245"),
- *             @OA\Property(property="id_kategori_ukt", type="integer", example=1),
+ *             @OA\Property(property="id_kategori_ukt", type="string", example="TI1"),
  *             @OA\Property(property="status_tagihan", type="integer", example=0),
  *             @OA\Property(property="tgl_terbit", type="string", format="date", example="2025-01-10")
  *         )
@@ -74,7 +74,7 @@ class KeuTagihanController extends Controller
             'nim' => 'required|string|size:10',
             'nama_tagihan' => 'required|string|max:100',
             'id_thn_ak' => 'required|string|size:5',
-            'id_kategori_ukt' => 'required|integer|exists:tabel_kategori_ukt,id_kategori_ukt',
+            'id_kategori_ukt' => 'required|string|exists:tabel_kategori_ukt,id_kategori_ukt',
             'status_tagihan' => 'in:0,1',
             'tgl_terbit' => 'required|date',
         ]);
@@ -104,7 +104,7 @@ class KeuTagihanController extends Controller
  *             @OA\Property(property="nama_thn_ak", type="string"),
  *             @OA\Property(property="status_tagihan", type="integer"),
  *             @OA\Property(property="tgl_terbit", type="string", format="date"),
- *             @OA\Property(property="id_kategori_ukt", type="integer"),
+ *             @OA\Property(property="id_kategori_ukt", type="string"),
  *             @OA\Property(property="kategori_ukt", type="string"),
  *             @OA\Property(property="nominal", type="integer")
  *         )
@@ -119,7 +119,7 @@ class KeuTagihanController extends Controller
         // Ambil nama tahun akademik dari microservice
         $nama_thn_ak = null;
         try {
-            $response = Http::get('https://ti054d01.agussbn.my.id/api/thn-ak/' . $tagihan->id_thn_ak);
+            $response = Http::get('https://ti054d01.agussbn.my.id/api/tahun-akademik/' . $tagihan->id_thn_ak);
             if ($response->ok()) {
                 $thnAk = $response->json();
                 $nama_thn_ak = $thnAk['nama_thn_ak'] ?? null;
@@ -131,7 +131,7 @@ class KeuTagihanController extends Controller
         // Ambil nama mahasiswa berdasarkan NIM (karena endpoint tidak menerima NIM langsung)
         $nama_mhs = null;
         try {
-            $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa');
+            $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa/');
             if ($response->ok()) {
                 $listMahasiswa = $response->json();
                 foreach ($listMahasiswa as $mhs) {
@@ -148,10 +148,10 @@ class KeuTagihanController extends Controller
         return response()->json([
             'id_tagihan'      => $tagihan->id_tagihan,
             'nim'             => $tagihan->nim,
-            'nama_mhs'        => $nama_mhs,
+            'nama_mhs'        => $mahasiswa['nama_mhs'] ?? null,
             'nama_tagihan'    => $tagihan->nama_tagihan,
             'id_thn_ak'       => $tagihan->id_thn_ak,
-            'nama_thn_ak'     => $nama_thn_ak,
+            'nama_thn_ak'     => $nama_thn_ak['nama_thn_ak'] ?? null,
             'status_tagihan'  => $tagihan->status_tagihan,
             'tgl_terbit'      => $tagihan->tgl_terbit,
             'id_kategori_ukt' => $tagihan->id_kategori_ukt,
@@ -177,7 +177,7 @@ class KeuTagihanController extends Controller
  *             @OA\Property(property="nim", type="string"),
  *             @OA\Property(property="nama_tagihan", type="string"),
  *             @OA\Property(property="id_thn_ak", type="string"),
- *             @OA\Property(property="id_kategori_ukt", type="integer"),
+ *             @OA\Property(property="id_kategori_ukt", type="string"),
  *             @OA\Property(property="status_tagihan", type="integer"),
  *             @OA\Property(property="tgl_terbit", type="string", format="date")
  *         )
@@ -197,7 +197,7 @@ class KeuTagihanController extends Controller
             'nim' => 'sometimes|string|size:10',
             'nama_tagihan' => 'sometimes|string|max:100',
             'id_thn_ak' => 'sometimes|string|size:5',
-            'id_kategori_ukt' => 'sometimes|integer|exists:tabel_kategori_ukt,id_kategori_ukt',
+            'id_kategori_ukt' => 'sometimes|string|exists:tabel_kategori_ukt,id_kategori_ukt',
             'status_tagihan' => 'in:0,1',
             'tgl_terbit' => 'sometimes|date',
         ]);

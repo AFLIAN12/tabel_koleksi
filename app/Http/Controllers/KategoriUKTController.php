@@ -17,7 +17,7 @@ class KategoriUKTController extends Controller
  *         response=200,
  *         description="Berhasil mengambil data",
  *         @OA\JsonContent(type="array", @OA\Items(
- *             @OA\Property(property="id_kategori_ukt", type="integer"),
+ *             @OA\Property(property="id_kategori_ukt", type="string"),
  *             @OA\Property(property="id_prodi", type="integer"),
  *             @OA\Property(property="kategori_ukt", type="string"),
  *             @OA\Property(property="nominal", type="integer"),
@@ -38,6 +38,7 @@ class KategoriUKTController extends Controller
         $data = KategoriUKT::with('prodi')->get();
         return response()->json($data);
     }
+
 /**
  * @OA\Post(
  *     path="/api/kategori-ukt",
@@ -46,7 +47,8 @@ class KategoriUKTController extends Controller
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"id_prodi","kategori_ukt","nominal"},
+ *             required={"id_kategori_ukt","id_prodi","kategori_ukt","nominal"},
+ *             @OA\Property(property="id_kategori_ukt", type="string", example="TI1"),
  *             @OA\Property(property="id_prodi", type="integer"),
  *             @OA\Property(property="kategori_ukt", type="string"),
  *             @OA\Property(property="nominal", type="integer")
@@ -58,10 +60,11 @@ class KategoriUKTController extends Controller
  *     )
  * )
  */
-    // Simpan kategori UKT baru
+        // Simpan kategori UKT baru
     public function store(Request $request)
     {
         $data = $request->validate([
+            'id_kategori_ukt' => 'required|string|max:10|unique:tabel_kategori_ukt,id_kategori_ukt',
             'id_prodi' => 'required|exists:kol_prodi,id_prodi',
             'kategori_ukt' => 'required|string|max:100',
             'nominal' => 'required|integer|min:0',
@@ -78,13 +81,13 @@ class KategoriUKTController extends Controller
  *         name="id",
  *         in="path",
  *         required=true,
- *         @OA\Schema(type="integer")
+ *         @OA\Schema(type="string")
  *     ),
  *     @OA\Response(
  *         response=200,
  *         description="Berhasil mengambil detail",
  *         @OA\JsonContent(
- *             @OA\Property(property="id_kategori_ukt", type="integer"),
+ *             @OA\Property(property="id_kategori_ukt", type="string"),
  *             @OA\Property(property="id_prodi", type="integer"),
  *             @OA\Property(property="nama_prodi", type="string"),
  *             @OA\Property(property="jenjang", type="string"),
@@ -117,7 +120,7 @@ class KategoriUKTController extends Controller
  *         name="id",
  *         in="path",
  *         required=true,
- *         @OA\Schema(type="integer")
+ *         @OA\Schema(type="string")
  *     ),
  *     @OA\RequestBody(
  *         required=true,
@@ -154,7 +157,7 @@ class KategoriUKTController extends Controller
  *         name="id",
  *         in="path",
  *         required=true,
- *         @OA\Schema(type="integer")
+ *         @OA\Schema(type="string")
  *     ),
  *     @OA\Response(
  *         response=200,

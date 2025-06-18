@@ -9,10 +9,15 @@ class KategoriUKT extends Model
 {
     use HasFactory;
 
-    protected $table = 'tabel_kategori_ukt';
     protected $primaryKey = 'id_kategori_ukt';
-    protected $fillable = ['id_prodi', 'kategori_ukt', 'nominal'];
-
+    protected $table = 'tabel_kategori_ukt'; // <- Penting
+    protected $keyType = 'string';
+    protected $fillable = 
+    ['id_kategori_ukt',
+     'id_prodi', 
+     'kategori_ukt', 
+     'nominal'];
+    
     public function prodi()
     {
         return $this->belongsTo(KolProdi::class, 'id_prodi');

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('tabel_kategori_ukt', function (Blueprint $table) {
-        $table->id('id_kategori_ukt');
-        $table->TinyInteger('id_prodi');
-        $table->string('kategori_ukt', 100);
-        $table->unsignedInteger('nominal');
-        $table->timestamps();
+        Schema::create('tabel_kategori_ukt', function (Blueprint $table) {
+            $table->string('id_kategori_ukt', 10)->primary(); // varchar, primary key
+            $table->tinyInteger('id_prodi');
+            $table->string('kategori_ukt', 100);
+            $table->unsignedInteger('nominal');
+            $table->timestamps();
         });
     }
 
