@@ -149,7 +149,7 @@ public function show($id)
     return response()->json([
         'id_keringanan' => $keringanan->id_keringanan,
         'nim' => $keringanan->nim,
-        'nama_mhs' => $mahasiswa,
+        'nama_mhs' => $mahasiswa['nama_mhs'] ?? null,
         'id_thn_ak' => $keringanan->id_thn_ak,
         'nama_thn_ak' => $nama_thn_ak,
         'jenis_keringanan' => $keringanan->jenis_keringanan,
