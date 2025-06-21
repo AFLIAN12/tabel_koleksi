@@ -136,20 +136,26 @@ public function show($id)
     }
 
     // Ambil data mahasiswa dari microservice mahasiswa
-    $mahasiswa = null;
-    try {
-        $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa/' . $keringanan->nim);
-        if ($response->ok()) {
-            $mahasiswa = $response->json();
+    $nama_mhs = null;
+try {
+    $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa');
+    if ($response->ok()) {
+        $mahasiswaList = $response->json();
+        foreach ($mahasiswaList as $mhs) {
+            if ($mhs['nim'] === $keringanan->nim) {
+                $nama_mhs = $mhs['nama_mhs'];
+                break;
+            }
         }
-    } catch (\Exception $e) {
-        $mahasiswa = null;
     }
+} catch (\Exception $e) {
+    $nama_mhs = null;
+}
 
     return response()->json([
         'id_keringanan' => $keringanan->id_keringanan,
         'nim' => $keringanan->nim,
-        'nama_mhs' => $mahasiswa['nama_mhs'] ?? null,
+        'nama_mhs' => $nama_mhs,
         'id_thn_ak' => $keringanan->id_thn_ak,
         'nama_thn_ak' => $nama_thn_ak['nama_thn_ak'] ?? null,
         'jenis_keringanan' => $keringanan->jenis_keringanan,

@@ -119,7 +119,7 @@ class KeuTagihanController extends Controller
         // Ambil nama tahun akademik dari microservice
         $nama_thn_ak = null;
         try {
-            $response = Http::get('https://ti054d01.agussbn.my.id/api/tahun-akademik/' . $tagihan->id_thn_ak);
+            $response = Http::get('https://ti054d01.agussbn.my.id/api/tahun-akademik' . $tagihan->id_thn_ak);
             if ($response->ok()) {
                 $thnAk = $response->json();
                 $nama_thn_ak = $thnAk['nama_thn_ak'] ?? null;
@@ -131,7 +131,7 @@ class KeuTagihanController extends Controller
         // Ambil nama mahasiswa berdasarkan NIM (karena endpoint tidak menerima NIM langsung)
         $nama_mhs = null;
         try {
-            $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa/');
+            $response = Http::get('https://ti054d03.agussbn.my.id/api/mahasiswa/list_mahasiswa');
             if ($response->ok()) {
                 $listMahasiswa = $response->json();
                 foreach ($listMahasiswa as $mhs) {
@@ -148,7 +148,7 @@ class KeuTagihanController extends Controller
         return response()->json([
             'id_tagihan'      => $tagihan->id_tagihan,
             'nim'             => $tagihan->nim,
-            'nama_mhs'        => $mahasiswa['nama_mhs'] ?? null,
+            'nama_mhs'        => $nama_mhs,
             'nama_tagihan'    => $tagihan->nama_tagihan,
             'id_thn_ak'       => $tagihan->id_thn_ak,
             'nama_thn_ak'     => $nama_thn_ak['nama_thn_ak'] ?? null,
