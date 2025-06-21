@@ -148,7 +148,7 @@ class KeuTagihanController extends Controller
         return response()->json([
             'id_tagihan'      => $tagihan->id_tagihan,
             'nim'             => $tagihan->nim,
-            'nama_mhs'        => $mahasiswa['nama_mhs'] ?? null,
+            'nama_mhs'        => $nama_mhs,
             'nama_tagihan'    => $tagihan->nama_tagihan,
             'id_thn_ak'       => $tagihan->id_thn_ak,
             'nama_thn_ak'     => $nama_thn_ak['nama_thn_ak'] ?? null,
