@@ -20,5 +20,9 @@ class KeuKeringanan extends Model
     'id_tagihan',
 ];
 
+public function tagihan()
+{
+    return $this->belongsTo(\App\Models\KeuTagihan::class, 'id_tagihan', 'id_tagihan');
+}
 }
 

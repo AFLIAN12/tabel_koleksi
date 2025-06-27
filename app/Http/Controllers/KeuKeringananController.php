@@ -61,26 +61,42 @@ class KeuKeringananController extends Controller
  * )
  */
     // Simpan data baru
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'nim' => 'required|string|size:10',
-            'id_thn_ak' => 'required|string|size:5',
-            'jenis_keringanan' => 'required|string|max:50',
-            'jumlah_potongan' => 'required|integer|min:0',
-            'deskripsi_keringanan' => 'nullable|string',
-            'status_keringanan' => 'nullable|in:Disetujui,Ditolak',
-            'tgl_konfirmasi' => 'nullable|date',
-            'id_tagihan' => 'nullable|integer',
-        ]);
 
-        $keringanan = KeuKeringanan::create($data);
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'nim' => 'required|string|min:10|max:16',
+        'id_thn_ak' => 'required|string|size:5',
+        'jenis_keringanan' => 'required|string|max:50',
+        'jumlah_potongan' => 'required|integer|min:0',
+        'deskripsi_keringanan' => 'nullable|string',
+        'status_keringanan' => 'sometimes|in:Disetujui,Ditolak',
+        'tgl_konfirmasi' => 'nullable|date',
+    ]);
 
-        return response()->json([
-            'message' => 'Data keringanan berhasil ditambahkan.',
-            'data' => $keringanan
-        ], 201);
+    if (!isset($data['status_keringanan'])) {
+        $data['status_keringanan'] = 'Disetujui';
     }
+
+    // Cari tagihan berdasarkan NIM dan status belum lunas
+    $tagihan = \App\Models\KeuTagihan::where('nim', $data['nim'])
+        ->where('status_tagihan', '!=', 1)
+        ->orderByDesc('id_tagihan')
+        ->first();
+
+    if ($tagihan) {
+        $data['id_tagihan'] = $tagihan->id_tagihan;
+    } else {
+        return response()->json(['error' => 'Tagihan belum lunas tidak ditemukan untuk NIM ini.'], 404);
+    }
+
+    $keringanan = \App\Models\KeuKeringanan::create($data);
+
+    return response()->json([
+        'message' => 'Data keringanan berhasil ditambahkan.',
+        'data' => $keringanan
+    ], 201);
+}
 
 /**
  * @OA\Get(

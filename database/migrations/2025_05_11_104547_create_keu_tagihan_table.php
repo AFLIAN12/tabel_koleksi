@@ -9,7 +9,7 @@ return new class extends Migration {
 {
     Schema::create('keu_tagihan', function (Blueprint $table) {
         $table->id('id_tagihan');
-        $table->string('nim', 16);
+        $table->char('nim', 16);
         $table->string('nama_tagihan', 100);
         $table->char('id_thn_ak', 5);
         $table->string('id_kategori_ukt');

@@ -68,17 +68,31 @@ class KeuTagihanController extends Controller
  */
 
     // Simpan data tagihan baru
+
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nim' => 'required|string|size:10',
-            'nama_tagihan' => 'required|string|max:100',
-            'id_thn_ak' => 'required|string|size:5',
-            'id_kategori_ukt' => 'required|string|exists:tabel_kategori_ukt,id_kategori_ukt',
-            'status_tagihan' => 'in:0,1',
-            'tgl_terbit' => 'required|date',
-        ]);
-        $tagihan = KeuTagihan::create($data);
+        try {
+            $data = $request->validate([
+                'nim' => 'required|string|min:10|max:16',
+                'nama_tagihan' => 'required|string|max:100',
+                'id_thn_ak' => 'required|string|size:5',
+                'id_kategori_ukt' => 'required|string|exists:tabel_kategori_ukt,id_kategori_ukt',
+                'status_tagihan' => 'in:0,1',
+                'tgl_terbit' => 'required|date',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json($e->errors(), 422);
+        }
+
+        \Log::info('Data tagihan:', $data);
+
+        try {
+            $tagihan = KeuTagihan::create($data);
+        } catch (\Exception $e) {
+            \Log::error('Error create tagihan: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
         return response()->json(['message' => 'Tagihan berhasil ditambahkan.', 'data' => $tagihan], 201);
     }
 
